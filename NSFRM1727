@@ -301,7 +301,7 @@ local function FormatNumber(num)
     return FormatWithCommas(num) .. " (" .. AbbrevNumber(num) .. ")"
 end
 
-stats:AddLabel("⏱️ Session Statistics").TextSize = 30
+stats:AddLabel("⏱️ Session Statistics").TextSize = 25
 
 local stopwatchLabel = stats:AddLabel("Session Time: 0d 0h 0m 0s")
 stopwatchLabel.TextSize = 20
@@ -337,7 +337,7 @@ end)
 
 stats:AddLabel("------------------").TextSize = 14
 
-stats:AddLabel("📊 Leaderboard Stats").TextSize = 30
+stats:AddLabel("📊 Leaderboard Stats").TextSize = 25
 
 local strengthLabel = stats:AddLabel("Strength: -")
 strengthLabel.TextSize = 20
@@ -346,7 +346,7 @@ durabilityLabel.TextSize = 20
 
 stats:AddLabel("------------------").TextSize = 14
 
-stats:AddLabel("💪 Projected Stats").TextSize = 30
+stats:AddLabel("💪 Projected Stats").TextSize = 25
 
 local projectedStrengthLabel = stats:AddLabel("Strength Pace: -")
 projectedStrengthLabel.TextSize = 20
