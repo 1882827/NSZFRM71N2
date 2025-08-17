@@ -87,11 +87,12 @@ local function fastRepLoop()
         local startTime = tick()
         while tick() - startTime < 0.75 and runFastRep do
             for i = 1, repsPerTick do
-            pcall(function()
-            muscleEvent:FireServer("rep")
-              end)
-          end
-      end
+                pcall(function()
+                    muscleEvent:FireServer("rep")
+                end)
+                task.wait(0.02)
+            end
+        end
 
         while runFastRep and getPing() >= 100 do
             task.wait(1)
