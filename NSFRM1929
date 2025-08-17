@@ -82,26 +82,21 @@ end, {
     placeholder = "1",
 })
 
-local RunService = game:GetService("RunService")
-
 local function fastRepLoop()
     while runFastRep do
         local startTime = tick()
         while tick() - startTime < 0.75 and runFastRep do
             for i = 1, repsPerTick do
-                pcall(function()
-                    muscleEvent:FireServer("rep")
-                end)
+                muscleEvent:FireServer("rep")
             end
+            task.wait(0.02)
         end
 
         while runFastRep and getPing() >= 100 do
             task.wait(1)
-          end
-      end
-
-      RunService.Heartbeat:Wait()
-  end
+        end
+    end
+end
 
 tabFarming:AddSwitch("Fast Rep", function(state)
     runFastRep = state
@@ -111,7 +106,6 @@ tabFarming:AddSwitch("Fast Rep", function(state)
         print("")
     end
 end)
-
 
 tabFarming:AddSwitch("Hide Pop Ups", function(bool)
     local rSto = game:GetService("ReplicatedStorage")
