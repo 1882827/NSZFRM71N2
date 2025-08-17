@@ -35,10 +35,10 @@ local function fastRepLoop()
         local startTime = tick()
         while tick() - startTime < 0.75 and runFastRep do
             for i = 1, repsPerTick do
-                muscleEvent:FireServer("rep")
+            pcall(function()
+            muscleEvent:FireServer("rep")
+              end)
             end
-            task.wait(0.02)
-        end
 
         while runFastRep and getPing() >= 100 do
             task.wait(1)
@@ -108,9 +108,8 @@ local function eatProteinEgg()
     local egg = backpack:FindFirstChild("Protein Egg")
     if egg then
         egg.Parent = character
-        pcall(function()
-            egg:Activate()
-        end)
+        task.wait(0.1)
+        egg:Activate()
     end
 end
 
