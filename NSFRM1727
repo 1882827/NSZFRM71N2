@@ -8,7 +8,7 @@ local window = library:AddWindow("Sad v1.0.0 | Farming", {
 
 local tabFarming = window:AddTab("Farming")
 
-tabFarming:AddLabel("Fast Farming").TextSize = 30
+tabFarming:AddLabel("Fast Farming").TextSize = 25
 
 local player = game.Players.LocalPlayer
 local muscleEvent = player:WaitForChild("muscleEvent")
@@ -160,7 +160,7 @@ local antiLagButton = tabFarming:AddButton("Anti Lag", function()
 end)
 antiLagButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-tabFarming:AddLabel("Pets").TextSize = 20
+tabFarming:AddLabel("Pets").TextSize = 25
 
 tabFarming:AddButton("Equip Swift Samurai", function()
     local petsFolder = game.Players.LocalPlayer.petsFolder
@@ -187,7 +187,7 @@ tabFarming:AddButton("Equip Swift Samurai", function()
     end
 end)
 
-tabFarming:AddLabel("Misc").TextSize = 20
+tabFarming:AddLabel("Misc").TextSize = 25
 
 local antiAFKEnabled = true
 tabFarming:AddSwitch("Anti AFK", function(bool)
