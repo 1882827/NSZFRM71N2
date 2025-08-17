@@ -38,7 +38,8 @@ local function fastRepLoop()
             pcall(function()
             muscleEvent:FireServer("rep")
               end)
-            end
+          end
+      end
 
         while runFastRep and getPing() >= 100 do
             task.wait(1)
@@ -190,18 +191,18 @@ tabFarming:AddLabel("Misc").TextSize = 25
 
 local antiAFKEnabled = true
 tabFarming:AddSwitch("Anti AFK", function(bool)
-    antiAFKEnabled = bool
-    
-    if bool then
-        setupAntiAFK()
-    else
-        if antiAFKConnection then
-            antiAFKConnection:Disconnect()
-            antiAFKConnection = nil
-            print("Anti-AFK system disabled")
-        end
-    end
-end, true)
+
+local VirtualUser = game:GetService("VirtualUser")
+local antiAFKConnection
+
+function setupAntiAFK()
+    antiAFKConnection = game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    end)
+    print("Anti-AFK system enabled")
+end
 
 tabFarming:AddSwitch("Auto Fortune Wheel", function(Value)
     _G.autoFortuneWheelActive = Value
