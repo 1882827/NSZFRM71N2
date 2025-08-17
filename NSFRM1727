@@ -1,3 +1,54 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local whitelist = {
+    ["SadNii4"] = true,
+    ["82iwkwjw3"] = true,
+    ["EternaIKing_ofc"] = true,
+    ["EternalQueen_ofc"] = true,
+    ["OfEternal_king"] = true,
+    ["OfEternal_queen"] = true,
+    ["PROPLAYER292827"] = true,
+    ["ilvieharbor73"] = true,
+    ["TOQUIO_94"] = true,
+    ["TOQUIO_944"] = true,
+    ["ARMY_S0LDIER8"] = true,
+    ["dorrido13"] = true,
+    ["PEBUGADOTUTORIAL"] = true,
+    ["TheLittle8Prince"] = true,
+    ["Italo444hzx"] = true,
+    ["NOOB_SEUPESADELO"] = true,
+    ["Voa_Passarinho8"] = true,
+    ["SadNii0"] = true,
+    ["NeezXIX"] = true,
+    ["Nicke_Nii"] = true,
+    ["KillMachineFatality"] = true,
+    ["Kansas_Girl8"] = true,
+    ["Maveick01"] = true,
+    ["XXDuquesa_julianaXX"] = true,
+    ["User25"] = true,
+    ["User26"] = true,
+    ["User27"] = true,
+    ["User28"] = true,
+    ["User29"] = true,
+    ["User30"] = true,
+    ["User31"] = true,
+    ["User32"] = true,
+    ["User33"] = true,
+    ["User34"] = true,
+    ["User35"] = true,
+    ["User36"] = true,
+    ["User37"] = true,
+    ["User38"] = true,
+    ["User39"] = true
+}
+
+if not whitelist[LocalPlayer.Name] then
+    LocalPlayer:Kick("Voce nao esta na whitelist para usar este script.")
+    return
+end
+
+
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/MlFrvWM/BBLT81/main/BL81827TC", true))()
 
 local window = library:AddWindow("Sad v1.0.0 | Farming", {
