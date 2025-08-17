@@ -90,7 +90,7 @@ local function fastRepLoop()
                 pcall(function()
                     muscleEvent:FireServer("rep")
                 end)
-                task.wait(0.02)
+                task.wait()
             end
         end
 
