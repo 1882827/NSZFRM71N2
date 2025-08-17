@@ -190,19 +190,21 @@ end)
 tabFarming:AddLabel("Misc").TextSize = 25
 
 local antiAFKEnabled = true
-tabFarming:AddSwitch("Anti AFK", function(bool)
-
-local VirtualUser = game:GetService("VirtualUser")
-local antiAFKConnection
-
-function setupAntiAFK()
-    antiAFKConnection = game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-        task.wait(1)
-        VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    end)
-    print("Anti-AFK system enabled")
-end
+tabFarming:AddSwitch("Anti AFK", function(state)
+    local VirtualUser = game:GetService("VirtualUser")
+    if state then
+        if not antiAFKEnabled then
+            antiAFKEnabled = true
+            game:GetService("Players").LocalPlayer.Idled:Connect(function()
+                VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+                task.wait(1)
+                VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+            end)
+        end
+    else
+        antiAFKEnabled = false
+    end
+end)
 
 tabFarming:AddSwitch("Auto Fortune Wheel", function(Value)
     _G.autoFortuneWheelActive = Value
