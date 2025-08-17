@@ -396,20 +396,20 @@ task.spawn(function()
         durabilityLabel.Text = "Durability: " .. FormatNumber(currentDurability) .. " | Gained: " .. FormatNumber(sessionDurabilityDelta)
 
         if tick() - lastUpdate >= 6 then
-            lastUpdate = tick()
-            local strengthPerSec = sessionStrengthDelta / elapsedTime
-            local durabilityPerSec = sessionDurabilityDelta / elapsedTime
+          lastUpdate = tick()
+          local strengthPerSec = sessionStrengthDelta / elapsedTime
+          local durabilityPerSec = sessionDurabilityDelta / elapsedTime
 
-            local secondsPerHour = 3600
-            local secondsPerDay = 86400
+          local secondsPerHour = 3600
+          local secondsPerDay = 86400
 
-            local strengthHour = math.floor(strengthPerSec * secondsPerHour)
-            local strengthDay = math.floor(strengthPerSec * secondsPerDay)
-            local durabilityHour = math.floor(durabilityPerSec * secondsPerHour)
-            local durabilityDay = math.floor(durabilityPerSec * secondsPerDay)
+          local strengthHour = math.floor(strengthPerSec * secondsPerHour)
+          local strengthDay = math.floor(strengthPerSec * secondsPerDay)
+          local durabilityHour = math.floor(durabilityPerSec * secondsPerHour)
+          local durabilityDay = math.floor(durabilityPerSec * secondsPerDay)
 
-            projectedStrengthLabel.Text = "Strength Pace: " .. FormatNumber(strengthHour) .. "/Hour | " .. FormatNumber(strengthDay) .. "/Day"
-            projectedDurabilityLabel.Text = "Durability Pace: " .. FormatNumber(durabilityHour) .. "/Hour | " .. FormatNumber(durabilityDay) .. "/Day"
+          projectedStrengthLabel.Text = "Strength Pace: " .. AbbrevNumber(strengthHour) .. "/Hour | " .. AbbrevNumber(strengthDay) .. "/Day"
+          projectedDurabilityLabel.Text = "Durability Pace: " .. AbbrevNumber(durabilityHour) .. "/Hour | " .. AbbrevNumber(durabilityDay) .. "/Day"
         end
     end
 end)
