@@ -89,7 +89,7 @@ local function fastRepLoop()
             for i = 1, repsPerTick do
                 muscleEvent:FireServer("rep")
             end
-            task.wait()
+            task.wait(0.02)
         end
 
         while runFastRep and getPing() >= 100 do
@@ -107,47 +107,7 @@ tabFarming:AddSwitch("Fast Rep", function(state)
     end
 end)
 
-tabFarming:AddSwitch("Hide Pop Ups", function(bool)
-    local rSto = game:GetService("ReplicatedStorage")
-    for _, obj in pairs(rSto:GetChildren()) do
-        if obj.Name:match("Frame$") then
-            obj.Visible = not bool
-        end
-    end
-end)
-
-local VIM = game:GetService("VirtualInputManager")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local function pressE()
-    VIM:SendKeyEvent(true, "E", false, game)
-    task.wait(0.1)
-    VIM:SendKeyEvent(false, "E", false, game)
-end
-
-local function autoLift()
-    while getgenv().working do
-        LocalPlayer.muscleEvent:FireServer("rep")
-        task.wait()
-    end
-end
-
-local function teleportAndStart(position)
-    local character = LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        character.HumanoidRootPart.CFrame = position
-        task.wait(0.1)
-        pressE()
-        getgenv().working = true
-        task.spawn(autoLift)
-    end
-end
-
-tabFarming:AddSwitch("Auto Jungle", function()
-    getgenv().working = false
-    teleportAndStart(CFrame.new(-8352, 34, 2878))
-end)
+tabFarming:AddLabel("Useful").TextSize = 20
 
 local autoEatEnabled = false
 
@@ -159,8 +119,9 @@ local function eatProteinEgg()
     local egg = backpack:FindFirstChild("Protein Egg")
     if egg then
         egg.Parent = character
-        task.wait(0.1)
-        egg:Activate()
+        pcall(function()
+            egg:Activate()
+        end)
     end
 end
 
@@ -170,13 +131,22 @@ task.spawn(function()
             eatProteinEgg()
             task.wait(1800)
         else
-            task.wait(2)
+            task.wait(1)
         end
     end
 end)
 
-tabFarming:AddSwitch("Auto Egg", function(state)
+tabFarming:AddSwitch("Auto Eat Egg", function(state)
     autoEatEnabled = state
+end)
+
+tabFarming:AddSwitch("Hide All Frames", function(bool)
+    local rSto = game:GetService("ReplicatedStorage")
+    for _, obj in pairs(rSto:GetChildren()) do
+        if obj.Name:match("Frame$") then
+            obj.Visible = not bool
+        end
+    end
 end)
 
 tabFarming:AddButton("Anti Lag", function()
@@ -252,7 +222,7 @@ tabFarming:AddButton("Anti Lag", function()
     darkenSky()
 end)
 
-tabFarming:AddLabel("Pets").TextSize = 25
+tabFarming:AddLabel("Pets").TextSize = 20
 
 tabFarming:AddButton("Equip Swift Samurai", function()
     local petsFolder = game.Players.LocalPlayer.petsFolder
@@ -276,189 +246,5 @@ tabFarming:AddButton("Equip Swift Samurai", function()
     for i = 1, math.min(8, #petsToEquip) do
         game:GetService("ReplicatedStorage").rEvents.equipPetEvent:FireServer("equipPet", petsToEquip[i])
         task.wait(0.1)
-    end
-end)
-
-tabFarming:AddLabel("Misc").TextSize = 25
-
-local antiAFKEnabled = true
-tabFarming:AddSwitch("Anti AFK", function(state)
-    local VirtualUser = game:GetService("VirtualUser")
-    if state then
-        if not antiAFKEnabled then
-            antiAFKEnabled = true
-            game:GetService("Players").LocalPlayer.Idled:Connect(function()
-                VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-                task.wait(1)
-                VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-            end)
-        end
-    else
-        antiAFKEnabled = false
-    end
-end)
-
-tabFarming:AddSwitch("Auto Fortune Wheel", function(Value)
-    _G.autoFortuneWheelActive = Value
-    if Value then
-        local function openFortuneWheel()
-            while _G.autoFortuneWheelActive do
-                local args = {
-                    [1] = "openFortuneWheel",
-                    [2] = game:GetService("ReplicatedStorage"):WaitForChild("fortuneWheelChances"):WaitForChild("Fortune Wheel")
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openFortuneWheelRemote"):InvokeServer(unpack(args))
-                wait(0)
-            end
-        end
-        coroutine.wrap(openFortuneWheel)()
-    else
-        _G.autoFortuneWheelActive = false
-    end
-end)
-
-local autoEatBoostsEnabled = false
-
-local boostsList = {
-    "ULTRA Shake",
-    "TOUGH Bar",
-    "Protein Shake",
-    "Energy Shake",
-    "Protein Bar",
-    "Energy Bar",
-    "Tropical Shake"
-}
-
-local function eatAllBoosts()
-    local player = game.Players.LocalPlayer
-    local backpack = player:WaitForChild("Backpack")
-    local character = player.Character or player.CharacterAdded:Wait()
-
-    for _, boostName in ipairs(boostsList) do
-        local boost = backpack:FindFirstChild(boostName)
-        while boost do
-            boost.Parent = character
-            pcall(function()
-                boost:Activate()
-            end)
-            task.wait(2)
-            boost = backpack:FindFirstChild(boostName)
-        end
-    end
-end
-
-task.spawn(function()
-    while true do
-        if autoEatBoostsEnabled then
-            eatAllBoosts()
-            task.wait(2)
-        else
-            task.wait(1)
-        end
-    end
-end)
-
-tabFarming:AddSwitch("Eat Items", function(state)
-    autoEatBoostsEnabled = state
-end)
-
-local statsTab = window:AddTab("Stats")
-
-local player = game.Players.LocalPlayer
-local leaderstats = player:WaitForChild("leaderstats")
-local strengthStat = leaderstats:WaitForChild("Strength")
-local durabilityStat = player:WaitForChild("Durability")
-
-local function formatNumber(number)
-    local isNegative = number < 0
-    number = math.abs(number)
-
-    if number >= 1e15 then
-        return (isNegative and "-" or "") .. string.format("%.2fQa", number / 1e15)
-    elseif number >= 1e12 then
-        return (isNegative and "-" or "") .. string.format("%.2fT", number / 1e12)
-    elseif number >= 1e9 then
-        return (isNegative and "-" or "") .. string.format("%.2fB", number / 1e9)
-    elseif number >= 1e6 then
-        return (isNegative and "-" or "") .. string.format("%.2fM", number / 1e6)
-    elseif number >= 1e3 then
-        return (isNegative and "-" or "") .. string.format("%.2fK", number / 1e3)
-    else
-        return (isNegative and "-" or "") .. string.format("%.2f", number)
-    end
-end
-
-statsTab:AddLabel("⏱️ Session Statistics").TextSize = 30
-local stopwatchLabel = statsTab:AddLabel("Session Time: 0d 0h 0m 0s")
-stopwatchLabel.TextSize = 20
-
-local resetSession = false
-statsTab:AddButton("Reset Session Stats", function()
-    resetSession = true
-end)
-
-statsTab:AddLabel("------------------").TextSize = 14
-
-statsTab:AddLabel("📊 Projected Stats").TextSize = 26
-local projectedStrengthLabel = statsTab:AddLabel("Strength Pace: 0 /Hour | 0 /Day")
-projectedStrengthLabel.TextSize = 20
-local projectedDurabilityLabel = statsTab:AddLabel("Durability Pace: 0 /Hour | 0 /Day")
-projectedDurabilityLabel.TextSize = 20
-
-statsTab:AddLabel("------------------").TextSize = 14
-
-statsTab:AddLabel("💪 Player Stats").TextSize = 26
-local strengthLabel = statsTab:AddLabel("Strength: 0 | Gained: 0")
-strengthLabel.TextSize = 20
-local durabilityLabel = statsTab:AddLabel("Durability: 0 | Gained: 0")
-durabilityLabel.TextSize = 20
-
-local startTime = tick()
-local initialStrength = strengthStat.Value
-local initialDurability = durabilityStat.Value
-
-task.spawn(function()
-    local lastUpdate = 0
-    while task.wait(1) do
-        local elapsedTime = tick() - startTime
-
-        local days = math.floor(elapsedTime / (24 * 3600))
-        local hours = math.floor((elapsedTime % (24 * 3600)) / 3600)
-        local minutes = math.floor((elapsedTime % 3600) / 60)
-        local seconds = math.floor(elapsedTime % 60)
-        stopwatchLabel.Text = string.format("Session Time: %dd %dh %dm %ds", days, hours, minutes, seconds)
-
-        if resetSession then
-            startTime = tick()
-            initialStrength = strengthStat.Value
-            initialDurability = durabilityStat.Value
-            resetSession = false
-        end
-
-        local currentStrength = strengthStat.Value
-        local currentDurability = durabilityStat.Value
-
-        local sessionStrengthDelta = currentStrength - initialStrength
-        local sessionDurabilityDelta = currentDurability - initialDurability
-
-        strengthLabel.Text = "Strength: " .. formatNumber(currentStrength) .. " | Gained: " .. formatNumber(sessionStrengthDelta)
-        durabilityLabel.Text = "Durability: " .. formatNumber(currentDurability) .. " | Gained: " .. formatNumber(sessionDurabilityDelta)
-
-        if tick() - lastUpdate >= 6 then
-            lastUpdate = tick()
-            local strengthPerSec = sessionStrengthDelta / elapsedTime
-            local durabilityPerSec = sessionDurabilityDelta / elapsedTime
-
-            local secondsPerHour = 3600
-            local secondsPerDay = 86400
-
-            local strengthHour = math.floor(strengthPerSec * secondsPerHour)
-            local strengthDay = math.floor(strengthPerSec * secondsPerDay)
-            local durabilityHour = math.floor(durabilityPerSec * secondsPerHour)
-            local durabilityDay = math.floor(durabilityPerSec * secondsPerDay)
-
-            projectedStrengthLabel.Text = "Strength Pace: " .. formatNumber(strengthHour) .. "/Hour | " .. formatNumber(strengthDay) .. "/Day"
-            projectedDurabilityLabel.Text = "Durability Pace: " .. formatNumber(durabilityHour) .. "/Hour | " .. formatNumber(durabilityDay) .. "/Day"
-        end
     end
 end)
