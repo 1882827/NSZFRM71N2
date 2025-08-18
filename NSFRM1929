@@ -361,19 +361,12 @@ end)
 tabFarming:AddSwitch("Eat Items", function(state)
     autoEatBoostsEnabled = state
 end)
-
 local statsTab = window:AddTab("Stats")
 
 local player = game.Players.LocalPlayer
 local leaderstats = player:WaitForChild("leaderstats")
 local strengthStat = leaderstats:WaitForChild("Strength")
-local rebirthsStat = leaderstats:WaitForChild("Rebirths")
 local durabilityStat = player:WaitForChild("Durability")
-local killsStat = leaderstats:WaitForChild("Kills")
-local agilityStat = player:WaitForChild("Agility")
-local evilKarmaStat = player:WaitForChild("evilKarma")
-local goodKarmaStat = player:WaitForChild("goodKarma")
-local brawlsStat = leaderstats:WaitForChild("Brawls")
 
 local function formatNumber(number)
     local isNegative = number < 0
@@ -397,29 +390,6 @@ end
 statsTab:AddLabel("⏱️ Session Statistics").TextSize = 30
 local stopwatchLabel = statsTab:AddLabel("Session Time: 0d 0h 0m 0s")
 stopwatchLabel.TextSize = 20
-local customTimerLabel = statsTab:AddLabel("Custom Timer: Not started")
-customTimerLabel.TextSize = 20
-
-local isCustomRunning = false
-local customStart = 0
-local customElapsed = 0
-
-statsTab:AddButton("Start/Stop Custom Timer", function()
-    if not isCustomRunning then
-        isCustomRunning = true
-        customStart = tick() - customElapsed
-    else
-        isCustomRunning = false
-        customElapsed = tick() - customStart
-    end
-end)
-
-statsTab:AddButton("Reset Custom Timer", function()
-    isCustomRunning = false
-    customStart = 0
-    customElapsed = 0
-    customTimerLabel.Text = "Custom Timer: Not started"
-end)
 
 local resetSession = false
 statsTab:AddButton("Reset Session Stats", function()
@@ -428,41 +398,19 @@ end)
 
 statsTab:AddLabel("------------------").TextSize = 14
 
-local projectedStrengthLabel = statsTab:AddLabel("Projected Strength: 0 /Hour | 0 /Day")
-projectedStrengthLabel.TextSize = 20
-local projectedDurabilityLabel = statsTab:AddLabel("Projected Durability: 0 /Hour | 0 /Day")
-projectedDurabilityLabel.TextSize = 20
-local projectedRebirthsLabel = statsTab:AddLabel("Projected Rebirths: 0 /Hour | 0 /Day")
-projectedRebirthsLabel.TextSize = 20
-
-statsTab:AddLabel("------------------").TextSize = 14
-
 local strengthLabel = statsTab:AddLabel("Strength: 0 | Gained: 0")
 strengthLabel.TextSize = 20
 local durabilityLabel = statsTab:AddLabel("Durability: 0 | Gained: 0")
 durabilityLabel.TextSize = 20
-local rebirthsLabel = statsTab:AddLabel("Rebirths: 0 | Gained: 0")
-rebirthsLabel.TextSize = 20
-local killsLabel = statsTab:AddLabel("Kills: 0 | Gained: 0")
-killsLabel.TextSize = 20
-local agilityLabel = statsTab:AddLabel("Agility: 0 | Gained: 0")
-agilityLabel.TextSize = 20
-local evilKarmaLabel = statsTab:AddLabel("Evil Karma: 0 | Gained: 0")
-evilKarmaLabel.TextSize = 20
-local goodKarmaLabel = statsTab:AddLabel("Good Karma: 0 | Gained: 0")
-goodKarmaLabel.TextSize = 20
-local brawlsLabel = statsTab:AddLabel("Brawls: 0 | Gained: 0")
-brawlsLabel.TextSize = 20
+
+local projectedStrengthLabel = statsTab:AddLabel("Strength Pace: 0 /Hour | 0 /Day")
+projectedStrengthLabel.TextSize = 20
+local projectedDurabilityLabel = statsTab:AddLabel("Durability Pace: 0 /Hour | 0 /Day")
+projectedDurabilityLabel.TextSize = 20
 
 local startTime = tick()
 local initialStrength = strengthStat.Value
 local initialDurability = durabilityStat.Value
-local initialRebirths = rebirthsStat.Value
-local initialKills = killsStat.Value
-local initialAgility = agilityStat.Value
-local initialEvilKarma = evilKarmaStat.Value
-local initialGoodKarma = goodKarmaStat.Value
-local initialBrawls = brawlsStat.Value
 
 task.spawn(function()
     local lastUpdate = 0
@@ -475,62 +423,26 @@ task.spawn(function()
         local seconds = math.floor(elapsedTime % 60)
         stopwatchLabel.Text = string.format("Session Time: %dd %dh %dm %ds", days, hours, minutes, seconds)
 
-        if isCustomRunning then
-            customElapsed = tick() - customStart
-        end
-        if customElapsed > 0 then
-            local d = math.floor(customElapsed / (24 * 3600))
-            local h = math.floor((customElapsed % (24 * 3600)) / 3600)
-            local m = math.floor((customElapsed % 3600) / 60)
-            local s = math.floor(customElapsed % 60)
-            customTimerLabel.Text = string.format("Custom Timer: %dd %dh %dm %ds", d, h, m, s)
-        end
-
         if resetSession then
             startTime = tick()
             initialStrength = strengthStat.Value
             initialDurability = durabilityStat.Value
-            initialRebirths = rebirthsStat.Value
-            initialKills = killsStat.Value
-            initialAgility = agilityStat.Value
-            initialEvilKarma = evilKarmaStat.Value
-            initialGoodKarma = goodKarmaStat.Value
-            initialBrawls = brawlsStat.Value
             resetSession = false
         end
 
         local currentStrength = strengthStat.Value
         local currentDurability = durabilityStat.Value
-        local currentRebirths = rebirthsStat.Value
-        local currentKills = killsStat.Value
-        local currentAgility = agilityStat.Value
-        local currentEvilKarma = evilKarmaStat.Value
-        local currentGoodKarma = goodKarmaStat.Value
-        local currentBrawls = brawlsStat.Value
 
         local sessionStrengthDelta = currentStrength - initialStrength
         local sessionDurabilityDelta = currentDurability - initialDurability
-        local sessionRebirthsDelta = currentRebirths - initialRebirths
-        local sessionKillsDelta = currentKills - initialKills
-        local sessionAgilityDelta = currentAgility - initialAgility
-        local sessionEvilKarmaDelta = currentEvilKarma - initialEvilKarma
-        local sessionGoodKarmaDelta = currentGoodKarma - initialGoodKarma
-        local sessionBrawlsDelta = currentBrawls - initialBrawls
 
         strengthLabel.Text = "Strength: " .. formatNumber(currentStrength) .. " | Gained: " .. formatNumber(sessionStrengthDelta)
         durabilityLabel.Text = "Durability: " .. formatNumber(currentDurability) .. " | Gained: " .. formatNumber(sessionDurabilityDelta)
-        rebirthsLabel.Text = "Rebirths: " .. formatNumber(currentRebirths) .. " | Gained: " .. formatNumber(sessionRebirthsDelta)
-        agilityLabel.Text = "Agility: " .. formatNumber(currentAgility) .. " | Gained: " .. formatNumber(sessionAgilityDelta)
-        killsLabel.Text = "Kills: " .. formatNumber(currentKills) .. " | Gained: " .. formatNumber(sessionKillsDelta)
-        evilKarmaLabel.Text = "Evil Karma: " .. formatNumber(currentEvilKarma) .. " | Gained: " .. formatNumber(sessionEvilKarmaDelta)
-        goodKarmaLabel.Text = "Good Karma: " .. formatNumber(currentGoodKarma) .. " | Gained: " .. formatNumber(sessionGoodKarmaDelta)
-        brawlsLabel.Text = "Brawls: " .. formatNumber(currentBrawls) .. " | Gained: " .. formatNumber(sessionBrawlsDelta)
 
         if tick() - lastUpdate >= 6 then
             lastUpdate = tick()
             local strengthPerSec = sessionStrengthDelta / elapsedTime
             local durabilityPerSec = sessionDurabilityDelta / elapsedTime
-            local rebirthsPerSec = sessionRebirthsDelta / elapsedTime
 
             local secondsPerHour = 3600
             local secondsPerDay = 86400
@@ -539,12 +451,9 @@ task.spawn(function()
             local strengthDay = math.floor(strengthPerSec * secondsPerDay)
             local durabilityHour = math.floor(durabilityPerSec * secondsPerHour)
             local durabilityDay = math.floor(durabilityPerSec * secondsPerDay)
-            local rebirthsHour = math.floor(rebirthsPerSec * secondsPerHour)
-            local rebirthsDay = math.floor(rebirthsPerSec * secondsPerDay)
 
             projectedStrengthLabel.Text = "Strength Pace: " .. formatNumber(strengthHour) .. "/Hour | " .. formatNumber(strengthDay) .. "/Day"
             projectedDurabilityLabel.Text = "Durability Pace: " .. formatNumber(durabilityHour) .. "/Hour | " .. formatNumber(durabilityDay) .. "/Day"
-            projectedRebirthsLabel.Text = "Rebirth Pace: " .. formatNumber(rebirthsHour) .. "/Hour | " .. formatNumber(rebirthsDay) .. "/Day"
         end
     end
 end)
