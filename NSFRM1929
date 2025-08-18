@@ -54,7 +54,7 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/MlFrv
 
 local window = library:AddWindow("Sad v1.0.0 | Farming", {
     main_color = Color3.fromRGB(20, 82, 24),
-    min_size = Vector2.new(550, 450),
+    min_size = Vector2.new(550, 400),
     can_resize = false,
 })
 
