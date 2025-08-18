@@ -361,6 +361,7 @@ end)
 tabFarming:AddSwitch("Eat Items", function(state)
     autoEatBoostsEnabled = state
 end)
+
 local statsTab = window:AddTab("Stats")
 
 local player = game.Players.LocalPlayer
@@ -398,15 +399,19 @@ end)
 
 statsTab:AddLabel("------------------").TextSize = 14
 
-local strengthLabel = statsTab:AddLabel("Strength: 0 | Gained: 0")
-strengthLabel.TextSize = 20
-local durabilityLabel = statsTab:AddLabel("Durability: 0 | Gained: 0")
-durabilityLabel.TextSize = 20
-
+statsTab:AddLabel("📊 Projected Stats").TextSize = 26
 local projectedStrengthLabel = statsTab:AddLabel("Strength Pace: 0 /Hour | 0 /Day")
 projectedStrengthLabel.TextSize = 20
 local projectedDurabilityLabel = statsTab:AddLabel("Durability Pace: 0 /Hour | 0 /Day")
 projectedDurabilityLabel.TextSize = 20
+
+statsTab:AddLabel("------------------").TextSize = 14
+
+statsTab:AddLabel("💪 Player Stats").TextSize = 26
+local strengthLabel = statsTab:AddLabel("Strength: 0 | Gained: 0")
+strengthLabel.TextSize = 20
+local durabilityLabel = statsTab:AddLabel("Durability: 0 | Gained: 0")
+durabilityLabel.TextSize = 20
 
 local startTime = tick()
 local initialStrength = strengthStat.Value
