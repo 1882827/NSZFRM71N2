@@ -89,7 +89,7 @@ local function fastRepLoop()
             for i = 1, repsPerTick do
                 muscleEvent:FireServer("rep")
             end
-            task.wait(0.02)
+            task.wait()
         end
 
         while runFastRep and getPing() >= 100 do
@@ -170,7 +170,7 @@ task.spawn(function()
             eatProteinEgg()
             task.wait(1800)
         else
-            task.wait(1)
+            task.wait(2)
         end
     end
 end)
@@ -341,7 +341,7 @@ local function eatAllBoosts()
             pcall(function()
                 boost:Activate()
             end)
-            task.wait(0)
+            task.wait(2)
             boost = backpack:FindFirstChild(boostName)
         end
     end
@@ -419,7 +419,7 @@ local initialDurability = durabilityStat.Value
 
 task.spawn(function()
     local lastUpdate = 0
-    while task.wait(0.2) do
+    while task.wait(1) do
         local elapsedTime = tick() - startTime
 
         local days = math.floor(elapsedTime / (24 * 3600))
