@@ -193,26 +193,49 @@ end)
 tabFarming:AddLabel("Useful").TextSize = 20
 
 local autoEatEnabled = false
+local lastEggTime = 0
+
+local function hasActiveEgg()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    
+    for _, child in pairs(character:GetChildren()) do
+        if child.Name == "ProteinEggEffect" or child.Name:find("ProteinEgg") or child.Name:find("EggBuff") then
+            return true
+        end
+    end
+    return false
+end
 
 local function eatProteinEgg()
     local player = game.Players.LocalPlayer
     local backpack = player:WaitForChild("Backpack")
-    local character = player.Character or player.CharacterAdded:Wait()
-
+    
+    if hasActiveEgg() then
+        lastEggTime = tick()
+        return false
+    end
+    
     local egg = backpack:FindFirstChild("Protein Egg")
     if egg then
+        local character = player.Character or player.CharacterAdded:Wait()
         egg.Parent = character
         pcall(function()
             egg:Activate()
         end)
+        lastEggTime = tick()
+        return true
     end
+    return false
 end
 
 task.spawn(function()
     while true do
         if autoEatEnabled then
-            eatProteinEgg()
-            task.wait(1800)
+            if not hasActiveEgg() and tick() - lastEggTime >= 1800 then
+                eatProteinEgg()
+            end
+            task.wait(5)
         else
             task.wait(1)
         end
