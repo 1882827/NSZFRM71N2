@@ -389,7 +389,7 @@ stopwatchLabel.TextSize = 20
 
 statsTab:AddLabel("").TextSize = 10
 
-local projectedLabel = statsTab:AddLabel("📊 Projected Pace")
+local projectedLabel = statsTab:AddLabel("Projected Pace")
 projectedLabel.TextSize = 24
 
 local projectedStrengthLabel = statsTab:AddLabel("Strength Pace: 0 /Hour | 0 /Day")
@@ -400,7 +400,7 @@ projectedDurabilityLabel.TextSize = 20
 
 statsTab:AddLabel("").TextSize = 10
 
-local statsLabel = statsTab:AddLabel("💪 Current Stats")
+local statsLabel = statsTab:AddLabel("Current Stats")
 statsLabel.TextSize = 24
 
 local strengthLabel = statsTab:AddLabel("Strength: 0 | Gained: 0")
